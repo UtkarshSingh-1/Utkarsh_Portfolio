@@ -261,9 +261,9 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 1.6 }}
         >
           {[
-            { value: '3+', label: 'Years Experience' },
-            { value: '20+', label: 'Projects Completed' },
-            { value: '15+', label: 'Happy Clients' },
+            { value: '2+', label: 'Years Experience' },
+            { value: '10+', label: 'Projects Completed' },
+            { value: '5+', label: 'Happy Clients' },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
