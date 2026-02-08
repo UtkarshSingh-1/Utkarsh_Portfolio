@@ -326,6 +326,24 @@ export function Contact() {
                 </div>
               </div>
             </Card3D>
+
+            {/* Resume download */}
+            <Card3D glowColor="cyan" intensity={8}>
+              <a
+                href="/Utkarsh_Singh_Resume.pdf"
+                download
+                className="flex items-center justify-between gap-4"
+                data-cursor-text="DOWNLOAD"
+              >
+                <div>
+                  <p className="text-white font-medium">Download Resume</p>
+                  <p className="text-sm text-white/50">PDF</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-cyan/10 flex items-center justify-center text-cyan">
+                  <Send className="w-5 h-5" />
+                </div>
+              </a>
+            </Card3D>
           </motion.div>
 
           {/* Contact form */}
