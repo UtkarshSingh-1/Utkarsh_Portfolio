@@ -66,14 +66,15 @@ function TimelineItem({
 
   return (
     <motion.div
-      className={`relative flex items-center gap-8 ${isEven ? 'flex-row' : 'flex-row-reverse'
-        }`}
-      initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+      className={`relative flex flex-col md:items-center gap-8 ${
+        isEven ? 'md:flex-row' : 'md:flex-row-reverse'
+      }`}
+      initial={{ opacity: 0, y: 20, x: isEven ? -30 : 30 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.3 + index * 0.15 }}
     >
       {/* Timeline dot */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-10">
+      <div className="hidden md:block absolute left-1/2 -translate-x-1/2 z-10">
         <motion.div
           className={`w-6 h-6 rounded-full bg-${experience.color} shadow-glow`}
           initial={{ scale: 0 }}
@@ -85,7 +86,7 @@ function TimelineItem({
       </div>
 
       {/* Content card */}
-      <div className={`w-[calc(50%-40px)] ${isEven ? 'pr-8' : 'pl-8'}`}>
+      <div className={`w-full md:w-[calc(50%-40px)] ${isEven ? 'md:pr-8' : 'md:pl-8'}`}>
         <Card3D glowColor={experience.color} intensity={10}>
           <div className="space-y-4">
             {/* Header */}
@@ -156,7 +157,7 @@ function TimelineItem({
       </div>
 
       {/* Empty space for other side */}
-      <div className="w-[calc(50%-40px)]" />
+      <div className="hidden md:block w-[calc(50%-40px)]" />
     </motion.div>
   );
 }
@@ -215,7 +216,7 @@ export function Experience() {
         {/* Timeline */}
         <div className="relative">
           {/* Center line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan via-purple to-magenta -translate-x-1/2" />
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan via-purple to-magenta -translate-x-1/2" />
 
           {/* Timeline items */}
           <div className="space-y-12">
