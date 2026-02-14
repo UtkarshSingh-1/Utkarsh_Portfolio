@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
 import gsap from 'gsap';
 
 export function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [cursorText, setCursorText] = useState('');
@@ -12,7 +10,7 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const springConfig = { damping: 25, stiffness: 400 };
+  const springConfig = { damping: 30, stiffness: 500 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -29,39 +27,36 @@ export function CustomCursor() {
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
-    // Track hoverable elements
-    const handleElementHover = () => {
-      const hoverables = document.querySelectorAll(
-        'a, button, [data-cursor="pointer"], input, textarea, select'
-      );
+    // Event delegation for performance
+    const handleOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('a, button, [data-cursor="pointer"], input, textarea, select, [data-cursor-text]');
+      if (target) {
+        setIsHovering(true);
+        const text = target.getAttribute('data-cursor-text');
+        if (text) setCursorText(text);
+      }
+    };
 
-      hoverables.forEach((el) => {
-        el.addEventListener('mouseenter', () => {
-          setIsHovering(true);
-          const text = el.getAttribute('data-cursor-text');
-          if (text) setCursorText(text);
-        });
-        el.addEventListener('mouseleave', () => {
-          setIsHovering(false);
-          setCursorText('');
-        });
-      });
+    const handleOut = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('a, button, [data-cursor="pointer"], input, textarea, select, [data-cursor-text]');
+      if (target) {
+        setIsHovering(false);
+        setCursorText('');
+      }
     };
 
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
-
-    // Initial setup and mutation observer for dynamic elements
-    handleElementHover();
-    const observer = new MutationObserver(handleElementHover);
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('mouseover', handleOver);
+    window.addEventListener('mouseout', handleOut);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
-      observer.disconnect();
+      window.removeEventListener('mouseover', handleOver);
+      window.removeEventListener('mouseout', handleOut);
     };
   }, [cursorX, cursorY]);
 
@@ -72,45 +67,50 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Main cursor ring */}
+      {/* Brackets */}
       <motion.div
-        ref={cursorRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
         }}
       >
-        <motion.div
-          className="relative -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-cyan"
-          animate={{
-            width: isHovering ? 60 : 40,
-            height: isHovering ? 60 : 40,
-            scale: isClicking ? 0.9 : 1,
-          }}
-          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          style={{
-            boxShadow: isHovering
-              ? '0 0 20px hsl(190 100% 50% / 0.5), 0 0 40px hsl(190 100% 50% / 0.3)'
-              : '0 0 10px hsl(190 100% 50% / 0.3)',
-          }}
-        >
+        <div className="relative -translate-x-1/2 -translate-y-1/2">
+          {/* Top Left */}
+          <motion.div
+            className="absolute -top-4 -left-4 w-2 h-2 border-t border-l border-cyan/50"
+            animate={{ x: isHovering ? -4 : 0, y: isHovering ? -4 : 0, opacity: isHovering ? 1 : 0.5 }}
+          />
+          {/* Top Right */}
+          <motion.div
+            className="absolute -top-4 -right-4 w-2 h-2 border-t border-r border-cyan/50"
+            animate={{ x: isHovering ? 4 : 0, y: isHovering ? -4 : 0, opacity: isHovering ? 1 : 0.5 }}
+          />
+          {/* Bottom Left */}
+          <motion.div
+            className="absolute -bottom-4 -left-4 w-2 h-2 border-b border-l border-cyan/50"
+            animate={{ x: isHovering ? -4 : 0, y: isHovering ? 4 : 0, opacity: isHovering ? 1 : 0.5 }}
+          />
+          {/* Bottom Right */}
+          <motion.div
+            className="absolute -bottom-4 -right-4 w-2 h-2 border-b border-r border-cyan/50"
+            animate={{ x: isHovering ? 4 : 0, y: isHovering ? 4 : 0, opacity: isHovering ? 1 : 0.5 }}
+          />
+
           {cursorText && (
             <motion.span
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-wider"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 20 }}
+              className="absolute left-1/2 -translate-x-1/2 text-[10px] font-mono text-cyan whitespace-nowrap tracking-widest uppercase"
             >
               {cursorText}
             </motion.span>
           )}
-        </motion.div>
+        </div>
       </motion.div>
 
-      {/* Cursor dot */}
+      {/* Main cursor dot */}
       <motion.div
-        ref={cursorDotRef}
         className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
           x: cursorX,
@@ -118,15 +118,12 @@ export function CustomCursor() {
         }}
       >
         <motion.div
-          className="w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan"
+          className="w-1.5 h-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan shadow-[0_0_10px_rgba(34,211,238,0.8)]"
           animate={{
-            scale: isClicking ? 0.5 : 1,
-            opacity: isHovering ? 0 : 1,
+            scale: isClicking ? 0.6 : 1,
+            opacity: isHovering ? 0.8 : 1,
           }}
           transition={{ type: 'spring', damping: 20, stiffness: 400 }}
-          style={{
-            boxShadow: '0 0 10px hsl(190 100% 50% / 0.8)',
-          }}
         />
       </motion.div>
 
@@ -140,71 +137,50 @@ function CursorTrail({
   cursorX,
   cursorY,
 }: {
-  cursorX: ReturnType<typeof useMotionValue<number>>;
-  cursorY: ReturnType<typeof useMotionValue<number>>;
+  cursorX: any;
+  cursorY: any;
 }) {
-  const trailRefs = useRef<HTMLDivElement[]>([]);
-  const trailLength = 5;
-
-  useEffect(() => {
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) return;
-
-    const updateTrail = () => {
-      const x = cursorX.get();
-      const y = cursorY.get();
-
-      trailRefs.current.forEach((trail, i) => {
-        if (!trail) return;
-        const delay = (i + 1) * 0.05;
-        gsap.to(trail, {
-          x: x,
-          y: y,
-          opacity: 1 - i * 0.15,
-          scale: 1 - i * 0.1,
-          duration: 0.3,
-          delay,
-          ease: 'power2.out',
-        });
-      });
-    };
-
-    const unsubscribeX = cursorX.on('change', updateTrail);
-    const unsubscribeY = cursorY.on('change', updateTrail);
-
-    return () => {
-      unsubscribeX();
-      unsubscribeY();
-    };
-  }, [cursorX, cursorY]);
-
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-    return null;
-  }
+  const trailLength = 4;
 
   return (
     <>
       {Array.from({ length: trailLength }).map((_, i) => (
-        <div
+        <CursorTrailPoint
           key={i}
-          ref={(el) => {
-            if (el) trailRefs.current[i] = el;
-          }}
-          className="fixed top-0 left-0 pointer-events-none z-[9998]"
-          style={{
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          <div
-            className="w-1 h-1 rounded-full"
-            style={{
-              background: `hsl(190 100% 50% / ${0.3 - i * 0.05})`,
-              boxShadow: `0 0 ${8 - i}px hsl(190 100% 50% / ${0.4 - i * 0.08})`,
-            }}
-          />
-        </div>
+          index={i}
+          cursorX={cursorX}
+          cursorY={cursorY}
+        />
       ))}
     </>
+  );
+}
+
+function CursorTrailPoint({ index, cursorX, cursorY }: { index: number, cursorX: any, cursorY: any }) {
+  const delay = (index + 1) * 0.05;
+  const springConfig = { damping: 20 + index * 2, stiffness: 200 - index * 20 };
+
+  const x = useSpring(cursorX, springConfig);
+  const y = useSpring(cursorY, springConfig);
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 pointer-events-none z-[9998]"
+      style={{
+        x,
+        y,
+        opacity: 0.3 - index * 0.05,
+        scale: 1 - index * 0.1,
+      }}
+    >
+      <div
+        className="w-1 h-1 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background: "hsl(190 100% 50%)",
+          boxShadow: `0 0 ${8 - index}px hsl(190 100% 50% / 0.8)`,
+        }}
+      />
+    </motion.div>
   );
 }
 

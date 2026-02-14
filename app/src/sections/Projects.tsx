@@ -5,6 +5,25 @@ import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
 
 const projects = [
   {
+    id: 3,
+    title: 'MiniArcade3D',
+    description:
+      'A premium 3D gaming arcade experience featuring interactive scroll-triggered animations and high-fidelity 3D models. Built with React, Three.js (R3F), and Framer Motion to deliver a seamless, immersive user journey. Optimized for 60fps performance with advanced asset loading and custom shaders.',
+    image: '',
+    tech: [
+      'React',
+      'Three.js',
+      'React Three Fiber',
+      'Framer Motion',
+      'Tailwind CSS',
+      'TypeScript',
+      'Vercel',
+    ],
+    liveUrl: 'https://miniarcade3d.vercel.app/',
+    githubUrl: 'https://github.com/UtkarshSingh-1/miniarcade3D',
+    featured: true,
+  },
+  {
     id: 1,
     title: 'Ashmark',
     description:
@@ -82,8 +101,8 @@ export function Projects() {
     >
       {/* Background */}
       <div className="absolute inset-0 grid-bg opacity-30" />
-      <div className="absolute top-1/3 right-0 w-96 h-96 bg-purple/10 rounded-full blur-[200px]" />
-      <div className="absolute bottom-1/3 left-0 w-96 h-96 bg-cyan/10 rounded-full blur-[200px]" />
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-purple/10 rounded-full blur-[80px]" />
+      <div className="absolute bottom-1/3 left-0 w-96 h-96 bg-cyan/10 rounded-full blur-[80px]" />
 
       <div className="container-custom relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Section header */}
@@ -134,11 +153,10 @@ export function Projects() {
                 <motion.button
                   key={project.id}
                   onClick={() => scrollToProject(index)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeIndex === index
-                      ? 'bg-cyan text-black'
-                      : 'glass text-white/70 hover:text-white'
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeIndex === index
+                    ? 'bg-cyan text-black'
+                    : 'glass text-white/70 hover:text-white'
+                    }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -193,11 +211,10 @@ export function Projects() {
               <button
                 key={index}
                 onClick={() => scrollToProject(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  activeIndex === index
-                    ? 'w-8 bg-cyan'
-                    : 'bg-white/30 hover:bg-white/50'
-                }`}
+                className={`w-2 h-2 rounded-full transition-all ${activeIndex === index
+                  ? 'w-8 bg-cyan'
+                  : 'bg-white/30 hover:bg-white/50'
+                  }`}
               />
             ))}
           </div>

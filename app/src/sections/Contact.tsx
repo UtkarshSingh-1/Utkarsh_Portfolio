@@ -66,9 +66,8 @@ function FormInput3D({
           <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
         ) : null}
         <div
-          className={`relative glass rounded-xl overflow-hidden transition-all duration-300 ${
-            isHovering ? 'shadow-glow border-cyan/30' : ''
-          } ${error ? 'border-red-500/50' : ''}`}
+          className={`relative glass rounded-xl overflow-hidden transition-all duration-300 ${isHovering ? 'shadow-glow border-cyan/30' : ''
+            } ${error ? 'border-red-500/50' : ''} ${Icon ? 'pl-10' : ''}`}
         >
           {children}
           {/* Focus glow effect */}
