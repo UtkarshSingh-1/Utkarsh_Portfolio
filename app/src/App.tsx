@@ -15,7 +15,7 @@ import { Hero } from '@/sections/Hero';
 import { About } from '@/sections/About';
 import { Skills } from '@/sections/Skills';
 import TechStack from './sections/TechStack';
-import ScrollDemo from './sections/ScrollDemo';
+import { HeroScrollDemo } from './components/demo';
 import Projects from './sections/Projects';
 import Journey from './sections/Journey';
 import Experience from './sections/Experience';
@@ -100,8 +100,8 @@ function App() {
         {/* Tech Stack Marquee */}
         <TechStack />
 
-        {/* Scroll Animation Demo */}
-        <ScrollDemo />
+        {/* Hero Scroll Animation Demo */}
+        <HeroScrollDemo />
 
         {/* Contact Section */}
         <Contact />
