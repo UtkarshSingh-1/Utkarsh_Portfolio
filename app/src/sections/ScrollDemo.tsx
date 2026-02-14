@@ -30,8 +30,8 @@ export function ScrollDemo() {
                 }
             >
                 <img
-                    src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop"
-                    alt="hero"
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
+                    alt="Hero Illustration"
                     className="mx-auto rounded-2xl object-cover h-full object-left-top w-full"
                     draggable={false}
                 />
